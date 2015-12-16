@@ -1,0 +1,55 @@
+/* 
+    Created on : 2015.12.07., 20:52:35
+    Author     : karcsi
+*/
+
+table, th, td {
+    border: black solid 1px;
+    border-collapse: collapse;
+}
+table .cols {
+    background-color: #EEE;
+    width: 128px;
+}
+table .rows {
+    background-color: #EEE;
+    text-align: center;
+}
+
+.selected {
+    border-width: 2px;
+}
+
+.select-row {
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
+.select-col {
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+}
+
+input {
+    width: 99%;
+    border-width: 0px;
+}
+
+ul li {
+    display: inline;
+    background-color: #EEE;
+    border: 1px solid black;
+    padding: 8px;
+    border-radius: 8px;
+    color: black;
+    cursor: pointer; 
+}
+
+ul li.disabled {
+    color: lightgray;
+    cursor: default; 
+}
+
+.right {
+    text-align: right;
+}
