@@ -71,7 +71,7 @@ class Excel extends Modell {
         if ($param < 2) {
             throw new Exception('Index of row is out of bounds:' . $param);
         }
-        $this->insert_update_delete('update settins set maxrow=?', $param);
+        $this->insert_update_delete('update settings set maxrow=?', $param);
         $this->maxrow = $param;
     }
     

@@ -264,28 +264,40 @@ function excelFactory(settings) {
     }
 
     function addRow() {
-        var td;
-        var tr = document.createElement('tr');
-        settings.maxRow++;
         removeSelection();
-        for (var i = 0; i <= settings.maxCol; i++) {
-            if (i === 0) {
-                td = document.createElement('td');
-                td.innerHTML = settings.maxRow;
-                td.className = 'rows row_' + settings.maxRow;
-                td.onclick = selectRow;
-                tr.appendChild(td);
-            } else {
-                var colStr = String.fromCharCode(64 + i);
-                td = document.createElement('td');
-                td.id = colStr + i;
-                td.className = 'cell col_' + i + ' row_' + settings.maxRow;
-                td.onclick = clickCell;
-                td.ondblclick = dblClickCell;
-                tr.appendChild(td);
+        $.post('index.php?home/add_row', {}, function (resp) {
+            console.log(resp);
+            try {
+                respObj = JSON.parse(resp);
+                if (respObj.status === 'OK') {
+                    var td;
+                    var tr = document.createElement('tr');
+                    settings.maxRow++;
+                    for (var i = 0; i <= settings.maxCol; i++) {
+                        if (i === 0) {
+                            td = document.createElement('td');
+                            td.innerHTML = settings.maxRow;
+                            td.className = 'rows row_' + settings.maxRow;
+                            td.onclick = selectRow;
+                            tr.appendChild(td);
+                        } else {
+                            var colStr = String.fromCharCode(64 + i);
+                            td = document.createElement('td');
+                            td.id = colStr + i;
+                            td.className = 'cell col_' + i + ' row_' + settings.maxRow;
+                            td.onclick = clickCell;
+                            td.ondblclick = dblClickCell;
+                            tr.appendChild(td);
+                        }
+                    }
+                    $('table tr:last').after(tr);
+                } else {
+                    throw res.msg;
+                }
+            } catch (e) {
+                console.log(e);
             }
-        }
-        $('table tr:last').after(tr);
+        });
     }
 
     removeSelection();

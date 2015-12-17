@@ -72,7 +72,8 @@ class Home extends Controller {
             $excel = new Excel();
             $excel->set_maxcol($excel->get_maxcol() + 1);
             $result = array(
-                'status' => 'OK'
+                'status' => 'OK',
+                'msg' => $excel->get_maxcol()
             );
             echo json_encode($result);
         } catch (Exception $ex) {
@@ -89,7 +90,8 @@ class Home extends Controller {
             $excel = new Excel();
             $excel->set_maxcol($excel->get_maxcol() - 1);
             $result = array(
-                'status' => 'OK'
+                'status' => 'OK',
+                'msg' => $excel->get_maxcol()
             );
             echo json_encode($result);
         } catch (Exception $ex) {
@@ -104,9 +106,10 @@ class Home extends Controller {
     public function add_row() {
         try {
             $excel = new Excel();
-            $excel->set_maxrow($excel->get_maxrow() + 1);
+            $excel->set_maxrow(array($excel->get_maxrow() + 1));
             $result = array(
-                'status' => 'OK'
+                'status' => 'OK',
+                'msg' => $excel->get_maxrow()
             );
             echo json_encode($result);
         } catch (Exception $ex) {
@@ -123,7 +126,8 @@ class Home extends Controller {
             $excel = new Excel();
             $excel->set_maxrow($excel->get_maxrow() - 1);
             $result = array(
-                'status' => 'OK'
+                'status' => 'OK',
+                'msg' => $excel->get_maxrow()
             );
             echo json_encode($result);
         } catch (Exception $ex) {
