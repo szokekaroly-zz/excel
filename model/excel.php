@@ -8,6 +8,17 @@ include_once 'libs/model.php';
  * @author karcsi
  */
 class Excel extends Modell {
+    private $maxcol;
+    private $maxrow;
+
+    public function __construct() {
+        parent::__construct();
+        $result = $this->query('select * from settings');
+        foreach ($result as $row => $value) {
+            $this->maxcol = $value['maxcol'];
+            $this->maxrow = $value['maxrow'];
+        }
+    }
 
     public function save_cell_value($param) {
         $sql = 'select count(*) as cnt from excel where col=? and row=?';
@@ -39,4 +50,29 @@ class Excel extends Modell {
         $result = $this->query($sql);
         return $result;
     }
+    
+    public function get_maxcol() {
+        return $this->maxcol;
+    }
+    
+    public function set_maxcol($param) {
+        if ($param<2 || $param > 25) {
+            throw new Exception('Index of col is out of bounds:' . $param);
+        }
+        $this->insert_update_delete('update settins set maxcol=?', $param);
+        $this->maxcol = $param;
+    }
+
+    public function get_maxrow() {
+        return $this->maxrow;
+    }
+    
+    public function set_maxrow($param) {
+        if ($param < 2) {
+            throw new Exception('Index of row is out of bounds:' . $param);
+        }
+        $this->insert_update_delete('update settins set maxrow=?', $param);
+        $this->maxrow = $param;
+    }
+    
 }

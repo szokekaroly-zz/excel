@@ -56,14 +56,19 @@ $(document).ready(function () {
         //console.log(resp);
         try {
             var cells = JSON.parse(resp);
-            for (var i = 0; i < cells.length; i++) {
-                var selector = '.col_' + cells[i].col + '.row_' + cells[i].row;
-                $(selector).html(cells[i].value);
-                if (!isNaN(cells[i].value) && isFinite(cells[i].value)) {
-                    $(selector).addClass('right');
-                } else {
-                    $(selector).removeClass('right');
+            if (cells.status === 'OK') {
+                cells = cells.cells;
+                for (var i = 0; i < cells.length; i++) {
+                    var selector = '.col_' + cells[i].col + '.row_' + cells[i].row;
+                    $(selector).html(cells[i].value);
+                    if (!isNaN(cells[i].value) && isFinite(cells[i].value)) {
+                        $(selector).addClass('right');
+                    } else {
+                        $(selector).removeClass('right');
+                    }
                 }
+            } else {
+                throw cells.msg;
             }
         } catch (e) {
             console.log(e);
