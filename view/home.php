@@ -19,9 +19,9 @@
         </nav>
         <table>
         <?php
-        for ($i = 0; $i < 16; $i++) {
+        for ($i = 0; $i <= $maxrow; $i++) {
             $line = '<tr>';
-            for ($j = 0; $j < 16; $j++) {
+            for ($j = 0; $j <= $maxcol; $j++) {
                 if ($i == 0) {
                     if ($j == 0) {
                         $line .= '<th></th>';
@@ -44,8 +44,8 @@
         </table>
         <script>
             settings = {
-                maxCol : <?php echo $max_cols; ?>,
-                maxRow : <?php echo $max_rows; ?>
+                maxCol : <?php echo $maxcol; ?>,
+                maxRow : <?php echo $maxrow; ?>
             }
         </script>
     </body>

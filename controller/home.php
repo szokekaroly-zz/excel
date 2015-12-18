@@ -17,8 +17,8 @@ class Home extends Controller {
         $view = new View_loader();
         $excel = new Excel();
         $data = array(
-            'max_cols' => $excel->get_maxcol(),
-            'max_rows' => $excel->get_maxrow()
+            'maxcol' => $excel->get_maxcol(),
+            'maxrow' => $excel->get_maxrow()
         );
         $view->load_view('home', $data);
     }
@@ -106,7 +106,7 @@ class Home extends Controller {
     public function add_row() {
         try {
             $excel = new Excel();
-            $excel->set_maxrow(array($excel->get_maxrow() + 1));
+            $excel->set_maxrow($excel->get_maxrow() + 1);
             $result = array(
                 'status' => 'OK',
                 'msg' => $excel->get_maxrow()

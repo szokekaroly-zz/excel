@@ -56,11 +56,14 @@ class Excel extends Modell {
     }
     
     public function set_maxcol($param) {
-        if ($param<2 || $param > 25) {
+        if ($param < 2 || $param > 25) {
             throw new Exception('Index of col is out of bounds:' . $param);
         }
-        $this->insert_update_delete('update settins set maxcol=?', $param);
+        if ($this->insert_update_delete('update settings set maxcol=?', array($param)) != 1) {
+            throw new Exception('Error updating max col!');
+        }
         $this->maxcol = $param;
+        $this->insert_update_delete('delete from excel where col>?', array($param));
     }
 
     public function get_maxrow() {
@@ -71,8 +74,11 @@ class Excel extends Modell {
         if ($param < 2) {
             throw new Exception('Index of row is out of bounds:' . $param);
         }
-        $this->insert_update_delete('update settings set maxrow=?', $param);
+        if ($this->insert_update_delete('update settings set maxrow=?', array($param)) != 1) {
+            throw new Exception('Error updating max row!');
+        }
         $this->maxrow = $param;
+        $this->insert_update_delete('delete from excel where row>?', array($param));
     }
     
 }

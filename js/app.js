@@ -211,61 +211,98 @@ function excelFactory(settings) {
     }
 
     function deleteSelectedCol() {
-        for (var toCol = col; toCol < settings.maxCol; toCol++) {
-            $('.col_' + toCol).each(function (i, element) {
-                if (i > 0) {
-                    var fromCol = toCol + 1;
-                    element.innerHTML = $('.col_' + fromCol + '.row_' + i).text();
-                }
-            });
-        }
-        $('.col_' + settings.maxCol--).remove();
         removeSelection();
-        if (settings.maxCol <= 26) {
-            $('#add-col').removeClass('disbled').addClass('enabled').click(addCol);
-        }
+        $.post('index.php?home/del_col', function (resp) {
+           console.log(resp); 
+            try {
+                respObj = JSON.parse(resp);
+                if (respObj.status === 'OK') {
+                    for (var toCol = col; toCol < settings.maxCol; toCol++) {
+                        $('.col_' + toCol).each(function (i, element) {
+                            if (i > 0) {
+                                var fromCol = toCol + 1;
+                                element.innerHTML = $('.col_' + fromCol + '.row_' + i).text();
+                            }
+                        });
+                    }
+                    $('.col_' + settings.maxCol).remove();
+                    settings.maxCol = + respObj.msg;
+                    if (settings.maxCol <= 26) {
+                        $('#add-col').removeClass('disbled').addClass('enabled').click(addCol);
+                    }
+                } else {
+                    throw respObj.msg;
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        });
     }
 
     function deleteSelectedRow() {
-        for (var toRow = row; toRow < settings.maxRow; toRow++) {
-            $('.row_' + toRow).each(function (i, element) {
-                if (i > 0) {
-                    var fromRow = toRow + 1;
-                    element.innerHTML = $('.row_' + fromRow + '.col_' + i).text();
-                }
-            });
-        }
-        $('.row_' + settings.maxRow--).parent().remove();
         removeSelection();
+        $.post('index.php?home/del_row', function (resp){
+            console.log(resp);
+            try {
+                var respObj = JSON.parse(resp);
+                if (respObj.status === 'OK') {
+                    settings.maxRow = +respObj.msg;
+                    for (var toRow = row; toRow < settings.maxRow + 1; toRow++) {
+                        $('.row_' + toRow).each(function (i, element) {
+                            if (i > 0) {
+                                var fromRow = toRow + 1;
+                                element.innerHTML = $('.row_' + fromRow + '.col_' + i).text();
+                            }
+                        });
+                    }
+                    $('.row_' + settings.maxRow + 1).parent().remove();
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        });
     }
 
     function addCol() {
-        var colStr = String.fromCharCode(65 + settings.maxCol++);
         removeSelection();
-        $('table tr').each(function (i, element) {
-            if (i === 0) {
-                var th = document.createElement('th');
-                th.innerHTML = colStr;
-                th.className = 'cols col_' + settings.maxCol;
-                th.onclick = selectCol;
-                element.appendChild(th);
-            } else {
-                var td = document.createElement('td');
-                td.id = colStr + i;
-                td.className = 'cell col_' + settings.maxCol + ' row_' + i;
-                td.onclick = clickCell;
-                td.ondblclick = dblClickCell;
-                element.appendChild(td);
+        $.post('index.php?home/add_col', function (resp) {
+            console.log(resp);
+            try {
+                respObj = JSON.parse(resp);
+                if (respObj.status === 'OK') {
+                    settings.maxCol = + respObj.msg;
+                    var colStr = String.fromCharCode(65 + settings.maxCol);
+                    $('table tr').each(function (i, element) {
+                        if (i === 0) {
+                            var th = document.createElement('th');
+                            th.innerHTML = colStr;
+                            th.className = 'cols col_' + settings.maxCol;
+                            th.onclick = selectCol;
+                            element.appendChild(th);
+                        } else {
+                            var td = document.createElement('td');
+                            td.id = colStr + i;
+                            td.className = 'cell col_' + settings.maxCol + ' row_' + i;
+                            td.onclick = clickCell;
+                            td.ondblclick = dblClickCell;
+                            element.appendChild(td);
+                        }
+                    });
+                    if (settings.maxCol === 26) {
+                        $('#add-col').addClass('disabled').off('click');
+                    }
+                } else {
+                    throw respObj.msg;
+                }
+            } catch (e) {
+                console.log(e);
             }
         });
-        if (settings.maxCol === 26) {
-            $('#add-col').addClass('disabled').off('click');
-        }
     }
 
     function addRow() {
         removeSelection();
-        $.post('index.php?home/add_row', {}, function (resp) {
+        $.post('index.php?home/add_row', function (resp) {
             console.log(resp);
             try {
                 respObj = JSON.parse(resp);
@@ -292,7 +329,7 @@ function excelFactory(settings) {
                     }
                     $('table tr:last').after(tr);
                 } else {
-                    throw res.msg;
+                    throw resp.msg;
                 }
             } catch (e) {
                 console.log(e);
@@ -301,6 +338,7 @@ function excelFactory(settings) {
     }
 
     removeSelection();
+    
     return {
         settings: settings,
         isEditMode: getEditMode,
